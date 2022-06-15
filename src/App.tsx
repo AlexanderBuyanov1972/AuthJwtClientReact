@@ -1,44 +1,32 @@
-import { observer } from 'mobx-react-lite';
 import React, { FC, useContext, useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 import { Context } from '.';
 import LoginForm from './components/login-form/LoginForm';
-import { IUser } from './models/IUser';
-import UserService from './services/UserService';
+import LocalStorageService from './services/LocalStorageService';
 
 const App: FC = () => {
   const { store } = useContext(Context)
-  const [users, setUsers] = useState<IUser[]>([])
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
-    if (localStorage.getItem('token'))
-      store.checkAuth()
+    setLoading(true)
+    const id = LocalStorageService.getId();
+    if(id){
+      store.check(id).then(res => setLoading(false))
+    }
+   
   }, [])
 
-  const fetchUsers = async () => {
-    try {
-      const response = await UserService.fetchUsers()
-      setUsers(response.data)
-      console.log(users)
-    } catch (error) {
-      console.log(error)
-    }
-
-  }
-
-  if (store.isLoading)
+  if (loading)
     return <div>
       <h1>LOADING...</h1>
     </div>
   return (
     <div className="App">
-      <h1>{store.isAuth ? `User is authorized ${store.user.email}` : "User is not authorized"}</h1>
-      <h1>{store.user.isActivated ? `User is activated by ${store.user.email}` : "Активируйте аккаунт"}</h1>
+      <h1>{store.isRegistered ? "User is registered" : "User is not registered"}</h1>
+      <h1>{store.isAuthorized ? "User is authorized " : "User is not authorized"}</h1>
+      <h1>{store.user.isActivated ? "User is activated" : "Activate your account"}</h1>
       <LoginForm />
-      <div>
-        <button onClick={fetchUsers}>List users</button>
-      </div>
-      {users.map(user =>
-        <div key={user.email}><h1>email: {user.email}</h1></div>
-      )}
     </div>
   );
 }

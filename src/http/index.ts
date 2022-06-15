@@ -1,12 +1,17 @@
 import axios from "axios";
-import { AuthResponse } from "../models/AuthResponse";
+import AuthService from "../services/AuthService";
+import LocalStorageService from "../services/LocalStorageService";
 
-
-export const API_URL_SERVER = 'http://localhost:5000/api'
+export const SERVER = "http://localhost:5000"
+export const REGISTRATION = "/registration"
+export const LOGIN = "/login"
+export const LOGOUT = "/logout"
+export const REFRESH = "/refresh"
+export const CHECK = "/check"
 
 const $api = axios.create({
     withCredentials: true,
-    baseURL: API_URL_SERVER,
+    baseURL: SERVER,
 
 })
 
@@ -23,11 +28,12 @@ $api.interceptors.response.use((config) => {
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
-            const response = await axios.get<AuthResponse>(`${API_URL_SERVER}/refresh`, { withCredentials: true })
-            localStorage.setItem('token', response.data.accessToken)
+            const {data} = await AuthService.refresh();
+            LocalStorageService.setToken( data.accessToken);
+           LocalStorageService.setId(data.user.id);
             return $api.request(originalRequest)
         } catch (error) {
-            console.log('Пользователь не авторизован')
+            console.log('User not authorized')
         }
     }
     throw error

@@ -5,27 +5,37 @@ import { observer } from "mobx-react-lite";
 
 
 const LoginForm: FC = () => {
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const {store} = useContext(Context)
+    const [username, setUsername] = useState<string>("alex")
+    const [email, setEmail] = useState<string>("globalist72@gmail.com")
+    const [password, setPassword] = useState<string>("12345")
+    const { store } = useContext(Context)
 
-    useEffect(()=> {
+    useEffect(() => {
 
     }, [])
 
     return (
         <div>
             <input
+                hidden={store.isRegistered}
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)} />
+            <br />
+            <input
                 type="text"
                 placeholder="Email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)} />
+            <br />
             <input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)} />
-            <button onClick={() => store.registration(email, password)}>Регистрация</button>
+            <br />
+            <button onClick={() => store.registration(username, email, password)}>Регистрация</button>
             <button onClick={() => store.login(email, password)}>Логин</button>
             <button onClick={() => store.logout()}>Выход</button>
         </div>
