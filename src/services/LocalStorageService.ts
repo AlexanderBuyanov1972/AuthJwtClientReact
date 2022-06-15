@@ -1,5 +1,3 @@
-import { AuthResponse } from "../models/Interfaces"
-
 export default class LocalStorageService {
 
     static setToken(value: string): void {

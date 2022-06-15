@@ -1,9 +1,14 @@
-export interface AuthResponse {
+export interface IResponse {
+    data: IAuth;
+    message: string;
+    resultCode: number;
+}
+
+export interface IAuth {
     accessToken: string;
     refreshToken: string;
     user: IUser;
-    message?: string;
-} 
+}
 
 export interface IUser {
     id: string;
@@ -12,3 +17,4 @@ export interface IUser {
     role: string
     isActivated: boolean;
 }
+

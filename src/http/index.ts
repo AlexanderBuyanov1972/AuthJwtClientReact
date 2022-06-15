@@ -28,9 +28,9 @@ $api.interceptors.response.use((config) => {
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
-            const {data} = await AuthService.refresh();
-            LocalStorageService.setToken( data.accessToken);
-           LocalStorageService.setId(data.user.id);
+            const res = await AuthService.refresh();
+            LocalStorageService.setToken( res.data.data.accessToken);
+           LocalStorageService.setId(res.data.data.user.id);
             return $api.request(originalRequest)
         } catch (error) {
             console.log('User not authorized')

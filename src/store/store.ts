@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import AuthService from "../services/AuthService";
-import { IUser } from "../models/Interfaces";
+import { IUser} from "../models/Interfaces";
 import LocalStorageService from "../services/LocalStorageService";
 
 export default class Store {
@@ -25,15 +25,15 @@ export default class Store {
     }
     async registration(username: string, email: string, password: string) {
         try {
-            const { data } = await AuthService.registration(username, email, password)
-            if (data.message) {
+            const res = await AuthService.registration(username, email, password)
+            if (res.data.resultCode !== 200) {
                 this.setIsRegistered(true)
                 return
             }
-            LocalStorageService.setToken(data.accessToken);
-            LocalStorageService.setId(data.user.id);
+            LocalStorageService.setToken(res.data.data.accessToken);
+            LocalStorageService.setId(res.data.data.user.id);
             this.setIsRegistered(true)
-            this.setUser(data.user)
+            this.setUser(res.data.data.user)
         } catch (error: any) {
             console.log(error);
         }
@@ -41,14 +41,14 @@ export default class Store {
 
     async login(email: string, password: string) {
         try {
-            const { data } = await AuthService.login(email, password)
-            LocalStorageService.setToken(data.accessToken)
-            LocalStorageService.setId(data.user.id)
+            const res = await AuthService.login(email, password)
+            LocalStorageService.setToken(res.data.data.accessToken)
+            LocalStorageService.setId(res.data.data.user.id)
             this.setIsAuthorized(true)
-            if (data.user.role === "ADMIN") {
+            if (res.data.data.user.role === "ADMIN") {
                 this.setIsAdmin(true)
             }
-            this.setUser(data.user)
+            this.setUser(res.data.data.user)
         } catch (error) {
             console.log(error);
         }
@@ -68,17 +68,16 @@ export default class Store {
 
     async check(id: string) {
         try {
-            const { data } = await AuthService.check(id)
-            if (data.message === "") {
+            const res = await AuthService.check(id)
+            if (res.data.resultCode !== 200) {
                 this.setIsRegistered(false)
                 this.setIsAuthorized(false)
                 this.setIsAdmin(false)
                 this.setUser({} as IUser)
             } else {
-                // LocalStorageService.setToken(data.accessToken)
-                LocalStorageService.setId(data.user.id)
+                LocalStorageService.setId(res.data.data.user.id)
                 this.setIsRegistered(true)
-                this.setUser(data.user)
+                this.setUser(res.data.data.user)
             }
         } catch (error) {
             console.log(error);
@@ -87,21 +86,21 @@ export default class Store {
 
     async refresh() {
         try {
-            const { data } = await AuthService.refresh();
-            if (data.message) {
+            const res = await AuthService.refresh();
+            if (res.data.resultCode !== 200) {
                 this.setIsRegistered(false)
                 this.setIsAuthorized(false)
                 this.setIsAdmin(false)
                 this.setUser({} as IUser)
             } else {
-                LocalStorageService.setToken(data.accessToken)
-                LocalStorageService.setId(data.user.id)
+                LocalStorageService.setToken(res.data.data.accessToken)
+                LocalStorageService.setId(res.data.data.user.id)
                 this.setIsRegistered(true)
                 this.setIsAuthorized(true)
-                if (data.user.role === "ADMIN") {
+                if (res.data.data.user.role === "ADMIN") {
                     this.setIsAdmin(true);
                 }
-                this.setUser(data.user)
+                this.setUser(res.data.data.user)
             }
 
         } catch (error) {
