@@ -107,4 +107,9 @@ export default class Store {
             console.log(error);
         } finally { }
     }
+
+    async getAll(){
+        const res = await AuthService.getAll();
+        console.log(res)
+    }
 }

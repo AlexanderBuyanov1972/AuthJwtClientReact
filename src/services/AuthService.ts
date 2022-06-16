@@ -22,4 +22,8 @@ export default class AuthService {
     static async refresh(): Promise<AxiosResponse<IResponse>> {
         return $api.get<IResponse>(REFRESH)
     }
+
+    static async getAll(): Promise<AxiosResponse<IResponse>> {
+        return $api.get<IResponse>('/all')
+    }
 }

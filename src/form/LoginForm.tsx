@@ -71,6 +71,12 @@ const LoginForm: FC = () => {
                         >
                             Logout
                         </Button>
+                        <Button
+                            variant="info"
+                            onClick={() => store.getAll()}
+                        >
+                            GetAll
+                        </Button>
                     </ButtonGroup>
                 </Form>
             

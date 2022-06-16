@@ -6,7 +6,6 @@ export interface IResponse {
 
 export interface IAuth {
     accessToken: string;
-    refreshToken: string;
     user: IUser;
 }
 
@@ -17,4 +16,3 @@ export interface IUser {
     role: string
     isActivated: boolean;
 }
-
