@@ -1,0 +1,22 @@
+.card {
+    width: 40%;
+    height: 400px;
+    padding: 1%;
+    margin: 1%;
+}
+
+.input {
+    width: 100%;
+    padding: 1%;
+    margin: 1%;
+}
+
+.buttons {
+    padding: 1%;
+    margin: 1%;
+}
+
+.button {
+    padding: 1%;
+    margin: 1%;
+}

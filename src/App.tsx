@@ -1,8 +1,8 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '.';
-import LoginForm from './components/login-form/LoginForm';
 import LocalStorageService from './services/LocalStorageService';
+import LoginForm from './form/LoginForm'
 
 const App: FC = () => {
   const { store } = useContext(Context)
@@ -11,10 +11,7 @@ const App: FC = () => {
   useEffect(() => {
     setLoading(true)
     const id = LocalStorageService.getId();
-    if(id){
-      store.check(id).then(res => setLoading(false))
-    }
-   
+    id ? store.check(id).then(res => setLoading(false)) : setLoading(false)
   }, [])
 
   if (loading)
