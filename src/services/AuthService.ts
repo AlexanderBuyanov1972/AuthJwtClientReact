@@ -1,29 +1,33 @@
-import $api, { CHECK, LOGIN, LOGOUT, REFRESH, REGISTRATION } from "../http";
+import { $api, $apiAuth, CHECK, LOGIN, LOGOUT, REFRESH, REGISTRATION } from "../http/index";
 import { AxiosResponse } from "axios";
-import { IResponse } from "../models/Interfaces";
 
 export default class AuthService {
-    static async registration(username: string, email: string, password: string): Promise<AxiosResponse<IResponse>> {
-        return $api.post<IResponse>(REGISTRATION, { username, email, password, role: "USER", isActivated: false })
+    static async registration(username: string, email: string, password: string): Promise<AxiosResponse> {
+        return $api.post(REGISTRATION, { username, email, password })
     }
 
-    static async login(email: string, password: string): Promise<AxiosResponse<IResponse>> {
-        return $api.post<IResponse>(LOGIN, { email, password })
+    static async login(email: string, password: string): Promise<AxiosResponse> {
+        return $api.post(LOGIN, { email, password })
     }
 
-    static async logout(): Promise<void> {
-        $api.get<IResponse>(LOGOUT)
+    static async logout(): Promise<AxiosResponse> {
+        return $apiAuth.get(LOGOUT)
     }
 
-    static async check(id: string): Promise<AxiosResponse<IResponse>> {
-        return $api.get<IResponse>(`${CHECK}/${id}`)
+    static async check(email: string): Promise<AxiosResponse> {
+        return $api.get(CHECK + "/" + email)
     }
 
-    static async refresh(): Promise<AxiosResponse<IResponse>> {
-        return $api.get<IResponse>(REFRESH)
+    static async refresh(): Promise<AxiosResponse> {
+        return $api.get(REFRESH)
     }
 
-    static async getAll(): Promise<AxiosResponse<IResponse>> {
-        return $api.get<IResponse>('/all')
+    static async refreshDouble(token: string): Promise<AxiosResponse> {
+        return $api.get(REFRESH + "/" + token)
+    }
+    // ------------------------- test ---------------------------------
+
+    static async getAll(): Promise<AxiosResponse> {
+        return $apiAuth.get('/persons')
     }
 }
