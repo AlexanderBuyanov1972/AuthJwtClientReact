@@ -1,19 +1,15 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { useContext,  useState } from "react"
 import styles from './LoginForm.module.css'
-import { Context } from "..";
-import { observer } from "mobx-react-lite";
-import { Button, ButtonGroup, Card, Form } from "react-bootstrap";
+import { Context, TypeRootStore } from ".."
+import { observer } from "mobx-react-lite"
+import { Button, ButtonGroup, Card, Form } from "react-bootstrap"
 
 
-const LoginForm  = () => {
-    const [username, setUsername] = useState<string>("user")
-    const [email, setEmail] = useState<string>("user@gmail.com")
-    const [password, setPassword] = useState<string>("user")
-    const { store } = useContext(Context)
-
-    useEffect(() => {
-
-    }, [])
+const LoginForm: React.FC  = observer(() => {
+    const [username, setUsername] = useState<string>("Moshe Avadiya")
+    const [email, setEmail] = useState<string>("moshe.avadiya.2019@gmail.com")
+    const [password, setPassword] = useState<string>("moshe2019")
+    const { authStore }: TypeRootStore = useContext(Context)
 
     return (
         <Card className={styles.card}>
@@ -22,7 +18,7 @@ const LoginForm  = () => {
                 <Form.Group className={styles.input} controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
-                        hidden={store.isRegistered}
+                        hidden={authStore.isRegistered}
                         type="text"
                         placeholder="Username"
                         value={username}
@@ -55,25 +51,25 @@ const LoginForm  = () => {
                 <ButtonGroup size="lg">
                     <Button
                         variant="info"
-                        onClick={() => store.registration(username, email, password)}
+                        onClick={() => authStore.registration(username, email, password)}
                     >
                         Registration
                     </Button>
                     <Button
                         variant="success"
-                        onClick={() => store.login(email, password)}
+                        onClick={() => authStore.login(email, password)}
                     >
                         Login
                     </Button>
                     <Button
                         variant="warning"
-                        onClick={() => store.logout()}
+                        onClick={() => authStore.logout()}
                     >
                         Logout
                     </Button>
                     <Button
                         variant="info"
-                        onClick={() => store.getAll()}
+                        onClick={() => authStore.getAll()}
                     >
                         GetAll
                     </Button>
@@ -82,6 +78,6 @@ const LoginForm  = () => {
 
         </Card>
     )
-}
+})
 
-export default observer(LoginForm);
+export default LoginForm

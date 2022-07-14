@@ -1,21 +1,17 @@
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Store from './store/store'
+import AuthStore from './store/auth-store';
 
-interface State {
-  store: Store,
-}
 
-const store = new Store()
+const rootStore = { authStore: new AuthStore(), }
 
-export const Context = createContext<State>({
-  store,
-})
+export type TypeRootStore = typeof rootStore
 
+export const Context = createContext({} as TypeRootStore)
 
 ReactDOM.render(
-  <Context.Provider value={{ store }}>
+  <Context.Provider value={rootStore}>
     <App />
   </Context.Provider>
   ,

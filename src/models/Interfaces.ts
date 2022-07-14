@@ -1,12 +1,7 @@
-export interface ResponseEntity {
-    data: IUser | string | null;
-    headers: any;
-    status: number;
-}
-export interface IUser {
+export interface User {
     username: string;
     email: string;
-    role: string
+    roles: string[]
     isActivated: boolean;
 }
 
@@ -19,13 +14,5 @@ export interface RegistrationRequest {
     username: string;
     email: string;
     password: string;
-    role: string;
-    isActivated: string;
-}
-
-export interface Store {
-    user: IUser
-    isRegistered: boolean
-    isLogin: boolean
-    isAdmin: boolean
+    roles: string[];
 }

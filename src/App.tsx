@@ -1,18 +1,18 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Context } from '.';
+import { Context, TypeRootStore } from '.';
 import localStorageService from './services/LocalStorageService';
 import LoginForm from './form/LoginForm'
 
-const App = () => {
-  const { store } = useContext(Context)
+const App: React.FC = () => {
+  const {authStore}: TypeRootStore = useContext(Context)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true);
     let email = localStorageService.getEmail()
     if (email.length > 7)
-      store.check(email).finally(() => setLoading(false))
+    authStore.check(email).finally(() => setLoading(false))
     setLoading(false);
   }, [])
 
@@ -22,9 +22,10 @@ const App = () => {
     </div>
   return (
     <div className="App">
-      <h1>{store.isRegistered ? "User is registered" : "User is not registered"}</h1>
-      <h1>{store.isLogin ? "User is authorized " : "User is not authorized"}</h1>
-      <h1>{store.user.isActivated ? "User is activated" : "Activate your account"}</h1>
+      <h1>{authStore.isRegistered ? "User is registered" : "User is not registered"}</h1>
+      <h1>{authStore.isLogin ? "User is authorized " : "User is not authorized"}</h1>
+      <h1>{authStore.isAdmin ? "User is admin" : "User is not admin"}</h1>
+      <h1>{authStore.error ? authStore.error : "Not errors"}</h1>
       <LoginForm />
     </div>
   );

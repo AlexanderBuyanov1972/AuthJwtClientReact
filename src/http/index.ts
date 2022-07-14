@@ -1,10 +1,8 @@
 import axios from "axios";
 import AuthService from "../services/AuthService";
-import LocalStorageService from "../services/LocalStorageService";
 import localStorageService from "../services/LocalStorageService";
 
-//export const SERVER = "http://localhost:5000"
-export const SERVER = "http://localhost:8080";
+export const SERVER = "http://localhost:5000/api"
 
 export const REGISTRATION = "/registration"
 export const LOGIN = "/login"
@@ -32,17 +30,10 @@ $apiAuth.interceptors.response.use((config) => { return config }, async (error) 
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
-            const res = await AuthService.refresh();
+            await AuthService.refresh()
             return $apiAuth.request(originalRequest)
         } catch (error) {
-            console.log('User not authorized. Send double refresh request.')
-            try {
-                const token = localStorageService.getRefreshToken();
-                const res = await AuthService.refreshDouble(token);
-                return $apiAuth.request(originalRequest)
-            } catch (error) {
-                console.log('User not authorized')
-            }
+            console.log('User not authorized.')
         }
     }
     throw error
